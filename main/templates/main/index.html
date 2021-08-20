@@ -1,0 +1,35 @@
+{% extends 'main/base.html'%}
+
+{% block title%}
+    {{title}}
+{% endblock %}
+
+{%block content %}
+{% if user.is_authenticated %}
+    <h1>Задачи</h1>
+    {% if tasks %}
+        {% for el in tasks %}
+            <div {% if el.status.id == 2 %} class='alert alert-success mt-2'
+                {% elif el.status.id == 1 %} class='alert alert-warning mt-2'
+                {% elif el.status.id == 3 %} class='alert alert-danger mt-2'
+                {% else %} class="alert alert-secondary mt-2" {% endif %}>
+                <p><h3>{{ el.title }}</h3>{{ el.status }}</p>
+                <p>{{ el.task }}</p>
+                <p>{% if el.status.id == 1 %}
+                    <button type="button" class="btn btn-outline-success" onclick="window.location.href = '{% url 'success' el.pk %}'">Выполнено</button>
+                    <button type="button" class="btn btn-outline-danger" onclick="window.location.href = '{% url 'defeat' el.pk %}'">Провалено</button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href = '{% url 'task' el.pk %}'">Изменить</button>
+                    <button type="button" class="btn btn-danger" onclick="window.location.href = '{% url 'delete' el.pk %}'">Удалить</button>
+                {% else %}
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href = '{% url 'task' el.pk %}'">Изменить</button>
+                    <button type="button" class="btn btn-danger" onclick="window.location.href = '{% url 'delete' el.pk %}'">Удалить</button>
+                {% endif %}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Записей нет!</p>
+    {% endif %}
+{% else %}
+    <p>Записей нет!</p>
+{% endif %}
+{% endblock %}
